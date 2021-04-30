@@ -1,56 +1,10 @@
-import React, { useState } from 'react';
-import {
-  Button,
-  Image,
-  Text,
-  Touchable,
-  TouchableOpacityBase,
-  View,
-} from 'react-native';
-import {
-  FlatList,
-  TouchableHighlight,
-  TouchableOpacity,
-} from 'react-native-gesture-handler';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
+import { Pressable, Text, View } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components/native';
-
-const sneakersArr = [
-  {
-    name: 'nike',
-    uri:
-      'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/f26e1847-941d-456f-a619-c46b5c827856/dbreak-type-mens-shoe-FGjGHz.jpg',
-  },
-  {
-    name: 'nike',
-    uri:
-      'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/f26e1847-941d-456f-a619-c46b5c827856/dbreak-type-mens-shoe-FGjGHz.jpg',
-  },
-  {
-    name: 'nike',
-    uri:
-      'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/f26e1847-941d-456f-a619-c46b5c827856/dbreak-type-mens-shoe-FGjGHz.jpg',
-  },
-  {
-    name: 'nike',
-    uri:
-      'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/f26e1847-941d-456f-a619-c46b5c827856/dbreak-type-mens-shoe-FGjGHz.jpg',
-  },
-  {
-    name: 'nike',
-    uri:
-      'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/f26e1847-941d-456f-a619-c46b5c827856/dbreak-type-mens-shoe-FGjGHz.jpg',
-  },
-  {
-    name: 'nike',
-    uri:
-      'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/f26e1847-941d-456f-a619-c46b5c827856/dbreak-type-mens-shoe-FGjGHz.jpg',
-  },
-  {
-    name: 'nike',
-    uri:
-      'https://static.nike.com/a/images/t_PDP_864_v1/f_auto,b_rgb:f5f5f5/f26e1847-941d-456f-a619-c46b5c827856/dbreak-type-mens-shoe-FGjGHz.jpg',
-  },
-];
+import rootReducer, { RootState } from '../module';
+import { getProductThunk } from '../module/product';
 
 const WallPaper = styled.ImageBackground`
   justify-content: center;
@@ -72,19 +26,34 @@ const ListImage = styled.Image`
   align-items: center;
   width: 100px;
   height: 100px;
+  margin-right: 10px;
 `;
 
 const ListContainer = styled.View`
   flex-direction: row;
+  align-items: center;
   padding: 20px 10px;
 `;
 
-const ListButton = styled.Button`
-  background-color: red;
+const ListButton = styled.Pressable`
+  background-color: rgb(82, 69, 59);
+  width: 25px;
+  height: 25px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
 `;
 
 function Product() {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const dispatch = useDispatch();
+  const products = useSelector((state: RootState) => state.product.products);
+
+  useEffect(() => {
+    const f = async () => {
+      await dispatch(getProductThunk());
+    };
+    f();
+  }, [dispatch]);
 
   return (
     <View>
@@ -92,22 +61,28 @@ function Product() {
         <Title>Sneaker Store</Title>
       </WallPaper>
       <FlatList
-        data={sneakersArr}
+        data={products}
         renderItem={({ item, index }) => {
           return (
             <View key={index}>
               <ListContainer>
                 <ListImage
                   source={{
-                    uri: item.uri,
+                    uri: item.imageUrl,
                     width: 50,
                     height: 50,
                   }}
                 />
-                <Text>{item.name}</Text>
-                <ListButton title="+" onPress={() => {}} />
-                <Text>1</Text>
-                <ListButton title="-" onPress={() => {}} />
+                <Text style={{ marginRight: 5 }} numberOfLines={1}>
+                  {item.name}
+                </Text>
+                <ListButton onPress={() => {}}>
+                  <Text style={{ color: 'white' }}>+</Text>
+                </ListButton>
+                <Text style={{ width: 15, textAlign: 'center' }}>1</Text>
+                <ListButton onPress={() => {}}>
+                  <Text style={{ color: 'white' }}>-</Text>
+                </ListButton>
               </ListContainer>
             </View>
           );

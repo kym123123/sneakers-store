@@ -7,8 +7,12 @@ import reducers from './module/index';
 import Product from './screen/Product';
 import Cart from './screen/Cart';
 import Thunk from 'redux-thunk';
+import { composeWithDevTools } from 'redux-devtools-extension';
 
-const store = createStore(reducers, applyMiddleware(Thunk));
+const store = createStore(
+  reducers,
+  composeWithDevTools(applyMiddleware(Thunk)),
+);
 const Stack = createStackNavigator();
 
 function App() {

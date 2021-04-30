@@ -10,10 +10,14 @@ const initialState: ProductState = {
 
 // reducer
 const product = createReducer<ProductState, ProductAction>(initialState)
-  .handleAction(getProductSuccess, (_, action) => ({
-    products: action.payload,
-    error: null,
-  }))
+  .handleAction(getProductSuccess, (_, action) => {
+    console.log(action.payload);
+
+    return {
+      products: action.payload,
+      error: null,
+    };
+  })
   .handleAction(getProductFailure, (state, action) => ({
     ...state,
     error: action.payload,

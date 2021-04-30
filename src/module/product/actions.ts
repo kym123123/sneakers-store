@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import { createAction } from 'typesafe-actions';
+import { createAction, createAsyncAction } from 'typesafe-actions';
 import { Products } from '../../api/product';
 
 // action type
@@ -20,3 +20,9 @@ export const getProductSuccess = createAction(GET_PRODUCT_SUCCESS)<
 export const getProductFailure = createAction(
   GET_PRODUCT_FAILURE,
 )<AxiosError>();
+
+export const getProductAsync = createAsyncAction(
+  GET_PRODUCT,
+  GET_PRODUCT_SUCCESS,
+  GET_PRODUCT_FAILURE,
+)<undefined, Products[], AxiosError>();
